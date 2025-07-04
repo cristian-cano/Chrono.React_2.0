@@ -1,0 +1,440 @@
+.contenedor{
+  --s: 198px; /* control the size*/
+  --c1: #a3c2b5;
+  --c2: #3d525c;
+  --c3: #ffffff;
+  
+  background:
+    repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 50%) 
+     calc(var(--s)/2) calc(var(--s)*tan(30deg)/2),
+    repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 50%);
+  background-size: var(--s) calc(var(--s)*tan(30deg));
+  
+  display: grid;
+  grid: column 6px;;
+}
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.contenedor{
+    margin-left:-3%;
+    margin-top: 0%;
+    width: 110%;
+    height: 100%;
+    align-items: center;
+    
+}
+
+.text-center{
+    height: 100%;
+    width: 100%;
+}
+
+.logo {
+  height: 6em;
+  padding: 1.5em;
+  will-change: filter;
+  transition: filter 300ms;
+}
+
+.logo:hover {
+  filter: drop-shadow(0 0 2em #646cffaa);
+}
+.logo.react:hover {
+  filter: drop-shadow(0 0 2em #61dafbaa);
+}
+
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.card {
+  padding: 2em;
+}
+
+.read-the-docs {
+  color: #888;
+}
+
+*{
+   margin: 0%;
+   padding: 0%;
+}
+body{
+    background-image: url(../static/Admin/img/13263.jpg);  
+    
+}
+.background-overlay {
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
+.titulo2 h1{
+    
+    width: 1360px;
+    display: flex;
+    justify-content: center;
+    text-align:center ;
+    color: white;    
+}
+
+header{
+    font-family: Arial, Helvetica, sans-serif;
+    text-align: center;
+    margin: 10px;
+    padding: 10px;
+    background: linear-gradient(150deg, rgba(33, 126, 133, 0.719),rgb(130, 208, 218), rgba(94, 156, 207, 0.712), rgb(16, 115, 133) ) ;
+    max-height: 300px;
+}
+header h2{
+    color: #007bff;
+    display: flex;
+    font-size: large;
+}
+
+header .fw-bold{
+    margin-top: -12%;
+    height: 10%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;  
+    size: large;  
+
+}
+.ti{
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    height: 75%;
+    width: 79%;
+
+}
+
+.ti .navbar-expand-lg .bg-body-tertiary{
+    height: 100%;
+    width: 100%;
+}
+
+h1{
+    font-size: 3rem;
+    font-weight: bold;
+    color: rgba(19, 18, 18, 0.678);
+    padding: 20px;   
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serifz;
+    
+}
+header .btn {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: center;
+    width: 200px;
+    max-width: 150px;   
+    font-size: 20px;
+    align-items: center;
+    background-color:  #ffffff;
+    color: rgb(0, 0, 0);
+    cursor: pointer;
+    float: right;
+    margin: 10px;
+    border-radius: 6px ;
+    border: 1px black  solid;
+    padding: 3px;
+    box-shadow: 0 0 7px     rgba(0, 0, 0, 0.432);
+
+}
+
+header .btn:hover{
+    transform: scale(2.5s);
+    background-color: rgb(35, 136, 219);
+    color: rgb(255, 255, 255);
+    transition: transform 0.6
+    backround-color 0.6;
+    transform: scale(1.07);
+    transition: transform 0.8s;
+   
+}
+
+.titulo2{
+    display: flex;
+    justify-content:space-between ;
+    flex-wrap: wrap;
+    align-items: center;
+    text-align:center ;
+    background: linear-gradient(150deg, rgb(106, 174, 230),rgb(20, 66, 104), rgb(20, 66, 104), rgb(134, 195, 245) ) ;
+    width: 100% ;
+    
+}
+
+.titulo1{
+    display: flex;
+    align-items: center;
+    width: 10px;
+    margin-right: 0px;
+    padding: 15px;
+}
+
+.titulo1 h2{
+    margin-left: 10px;
+    color: white;
+
+}
+.titulo1 img{
+    width: 60px;
+    height: auto;
+}
+
+.img-2{
+
+    width: 8px;
+    height: 10px;
+}
+
+.img-1{
+    padding: 50px;
+}
+
+
+.text1{
+    display: flex;
+    color: rgba(19, 18, 18, 0.534);
+    text-align: center;
+    font-size: 24px;
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    justify-content: center;
+    height: 450px;
+    width: 77%;
+    margin: 10px;
+    padding:    0px 0px 0px 0px;
+
+}
+
+.bot button{
+    background-color: rgb(248, 252, 255);
+    display: flex;
+    flex-direction: column;
+    margin: 4px;
+    margin-left: 5px;
+    padding: 5px;
+    text-align: center;
+    align-items: center;
+    cursor: pointer;
+    color: rgb(14, 13, 13);
+    box-shadow: 0 0 6px rgba(0, 0, 0, 0.733);
+    font-size: 20px;
+    border: 1px black solid;
+    border-radius: 9px;
+    justify-content: center;
+}
+
+.bot button:hover{
+    transform: scale(2.5s);
+    background: #a3c2b5;
+    color: rgb(0, 0, 0);
+    transition: transform 0.6
+    backround-color 0.6;
+    border: 2px solid;
+    transform: scale(1.07);
+    transition: transform 0.8s;
+
+}
+
+.botones{
+    display: flex;
+    justify-content: right;
+    margin-left: 360px;
+}
+
+.bot{
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding: 3px;
+
+}
+
+section{
+    display: flex;
+   justify-content: center;
+    width: 600px;
+    height: 430px;
+    margin-left: 370px ;
+    margin-top: 100px;
+}
+
+section .bienvenido {
+    
+    color: rgba(14, 9, 9, 0.712);
+    align-items: center;
+    text-align: center;
+    padding: 30px;
+    margin-left: -10%;
+    
+}
+
+.login-modal {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+section .bienvenido h2{
+    font-size: 30px;
+    font-weight: bold;
+    color: rgb(20, 66, 104);
+    margin-bottom: 20px;
+}
+section img{
+    width: 0px;
+    flex-grow: 1;
+    object-fit: cover;
+    opacity: .8;
+    transition: .5s ease;
+    
+}
+
+section img:hover{
+    cursor: pointer;
+    width: 300px;
+    opacity: 1;
+    filter: contrast(120%);
+}
+
+.hero{
+    width: 1312px;
+    background: linear-gradient(150deg, rgb(106, 174, 230),rgb(20, 66, 104), rgb(20, 66, 104), rgb(134, 195, 245) ) ;
+
+}
+
+
+section .bienvenido h2{
+    background: linear-gradient(150deg, rgb(106, 174, 230),rgb(20, 66, 104), rgb(20, 66, 104), rgb(134, 195, 245) ) ;
+    text-align: center;
+}
+
+section .hero h2{
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: x-large;
+    color: white;
+
+}
+section .hero p{
+    font-family: Arial, Helvetica, sans-serif;
+    
+    color: white;
+    height: 40px;
+    padding: 5px;
+}
+
+.tarjetas{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: row;
+    width: 100%;
+    height: auto;
+    gap: 50px;
+    margin-top: 15%;
+}
+
+.card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    margin-bottom: 50px;
+    box-shadow: 0px 0px 15px rgba(0,0,0, 0.08);
+    border-radius: 0px 0px 35px 35px;
+    padding: 20px;
+    background: rgb(255, 254, 254);
+    width: 50%;
+    height: 30%;
+    margin: 40px;
+}
+.fila1{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 90%;
+    
+    
+}
+.fila1 img{
+    position: absolute;
+    width: 250px;
+    bottom: -30px;
+}
+.fila1 img:hover{
+    transform: scale(1.07);
+    transition: transform 0.8s;
+}
+
+.fila2{
+    box-shadow: 0px 0px px 20px rgba(0, 0, 0, 0.39);
+    border-radius: 0px 0px 35px 35px;
+    padding: 20px;
+    background-color: white;
+}
+
+.fila2 h2{
+    background: rgb(255, 254, 254);
+    font-size: 24px;    
+    font-weight: bolder;
+    text-align: center;
+    padding: 12px;
+    color: rgb(20, 66, 104);
+}
+.fila2 p{
+    text-align: justify;
+    background: rgb(255, 255, 255);
+}
+.fila strong{
+    background: rgb(255, 254, 254); 
+}
+
+.container-fluid{
+    background: #2534419a;
+    
+    
+}
+
+.navbar-brand{
+    margin-left: 85px;
+    display: flex;
+    flex-flow: nowrap;
+}
+
+.nav-item{
+    margin-left: 10px;
+    font-size: 18px;
+}
+
+.d-flex{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 0%;
+    margin-right: -34%;
+}
+
+
