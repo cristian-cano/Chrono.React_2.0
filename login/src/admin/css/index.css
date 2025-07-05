@@ -4,6 +4,7 @@
 }
 /* General styles */
 body {
+    position: fixed center;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -11,9 +12,25 @@ body {
     text-align: center;
 }
 
+.contenedor{
+  --s: 198px; /* control the size*/
+  --c1: #a3c2b5;
+  --c2: #3d525c;
+  --c3: #ffffff;
+  
+  background:
+    repeating-conic-gradient(from 30deg,#0000 0 120deg,var(--c3) 0 50%) 
+     calc(var(--s)/2) calc(var(--s)*tan(30deg)/2),
+    repeating-conic-gradient(from 30deg,var(--c1) 0 60deg,var(--c2) 0 120deg,var(--c3) 0 50%);
+  background-size: var(--s) calc(var(--s)*tan(30deg));
+  
+  display: grid;
+  grid: column 6px;;
+  
+}
 /* Header styles */
 header {
-    background-color: rgba(0, 123, 255, 0.8);
+    background-color: rgba(209, 173, 10, 0.8);
     color: #ffffff;
     padding: 20px;
     font-size: 24px;
@@ -66,5 +83,29 @@ button:hover {
     cursor: pointer;
 }
 
+.mb-5 
+{
+    margin-bottom: 5px;
+    margin-left: 0;
+    height: auto;
+    width: 100%;
+    background: #9ebbaf;
+    border: 4px solid #032c5a;
+}
+.btn-primary {
+    margin-top: 2%;
+    margin-right: 2%;
+    margin-bottom: 5px;
+    max-height: 65px;
+    max-width: 95px;
+    overflow: hidden;
+}
+
+
+.modal-form-empleado {
+    width: 100%;
+    height: 100%;
+    background: #017cff;
+}
 
 

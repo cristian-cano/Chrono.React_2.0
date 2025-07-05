@@ -1,19 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 import logoCHG from '../../components/img/logoCHGcircul.png'; // Ajusta la ruta si es necesario
 import '../css/index.css'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import '../js/index.js'; // Asegúrate de que este archivo exista y contenga la lógica necesaria
 
-
 function Index() {
-    return (
-        <div>
-            <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
-                <div className="container-fluid">
-                    <img src={logoCHG} alt="Logo" style={{ width: 40, marginRight: 10 }} />
-                    <a className="navbar-brand" href="#">ChronoGuard</a>
-            <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+  const [rol, setRol] = useState('');
+
+  return (
+    <div className='contenedor'>
+      <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div className="container-fluid">
+          <img src={logoCHG} alt="Logo" style={{ width: 40, marginRight: 10 }} />
+          <a className="navbar-brand" href="#">ChronoGuard</a>
+          <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span className="navbar-toggler-icon"></span>
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
@@ -28,7 +29,7 @@ function Index() {
                 <a className="nav-link" href="#reportes">Reportes</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">Salir</a>
+                <a className="nav-link" href="http://localhost:5173/">Salir</a>
               </li>
             </ul>
           </div>
@@ -36,10 +37,16 @@ function Index() {
       </nav>
 
       <div className="container mt-4">
-        <h1 className="text-center mb-4">Panel de Administrador</h1>
+        <h1 className="text-center mb-4" 
+        style={{color: 'black',
+          background:'white',
+          
+
+        }}>Panel de Administrador</h1>
 
         {/* Sección de Empleados */}
         <section id="empleados" className="mb-5">
+        
           <h2>Gestión de Empleados</h2>
           <button className="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#modalAgregarEmpleado">Agregar Empleado</button>
           <table className="table table-striped">
@@ -57,43 +64,82 @@ function Index() {
                 <td>Juan Pérez</td>
                 <td>Lavado</td>
                 <td>
-                  <button className="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarEmpleado">Editar</button>
+                  <button className="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#modalEditarEmpleado" style={{background: 'rgba(253, 219, 66, 0.8)',
+                    marginRight: '5px'
+                  }}>Editar</button>
                   <button className="btn btn-danger btn-sm">Eliminar</button>
                 </td>
               </tr>
             </tbody>
           </table>
         </section>
-
+      
         {/* Modal para Agregar Empleado */}
+      <div className="modal-content modal-form-empleado">
         <div className="modal fade" id="modalAgregarEmpleado" tabIndex="-1" aria-labelledby="modalAgregarEmpleadoLabel" aria-hidden="true">
           <div className="modal-dialog">
-            <div className="modal-content">
+            <div className="modal-content modal-form-empleado" style={{ background: 'linear-gradient(135deg, #36dee4c2 0%, #2e3b75 100%)' }}>
               <div className="modal-header">
-                <h5 className="modal-title" id="modalAgregarEmpleadoLabel">Agregar Empleado</h5>
+                <h5 className="modal-title" id="modalAgregarEmpleadoLabel" style={{ color: 'white' }}>Agregar Empleado</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
               <div className="modal-body">
                 <form id="formAgregarEmpleado">
                   <div className="mb-3">
                     <label htmlFor="inputIdEmpleado" className="form-label">ID</label>
-                    <input type="text" className="form-control" id="inputIdEmpleado" required />
+                    <input type="number" className="form-control" id="inputIdEmpleado" required />
                   </div>
                   <div className="mb-3">
                     <label htmlFor="inputNombreEmpleado" className="form-label">Nombre</label>
                     <input type="text" className="form-control" id="inputNombreEmpleado" required />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="inputDepartamentoEmpleado" className="form-label">Departamento</label>
-                    <input type="text" className="form-control" id="inputDepartamentoEmpleado" required />
+                    <label htmlFor="inputRolEmpleado" className="form-label">Rol</label>
+                    <select
+                      className="form-select"
+                      id="inputRolEmpleado"
+                      required
+                      value={rol}
+                      onChange={e => setRol(e.target.value)}
+                    >
+                      <option value="" disabled>Seleccione un rol</option>
+                      <option value="Administrador">Administrador</option>
+                      <option value="Secretaria">Secretaria</option>
+                      <option value="Empleado">Empleado</option>
+                    </select>
                   </div>
+
+                  {rol === "Empleado" && (
+                    <div className="mb-3">
+                      <label htmlFor="inputDepartamentoEmpleado" className="form-label">Departamento</label>
+                      <select className="form-select" id="inputDepartamentoEmpleado" required>
+                        <option value="">Seleccione un departamento</option>
+                        <option value="Lavado">Lavado</option>
+                        <option value="Planchado">Planchado</option>
+                        <option value="Secado">Secado</option>
+                        <option value="Transporte">Transporte</option>
+                      </select>
+                    </div>
+                  )}
+                  
+                  <div className="mb-3">
+                    <label htmlFor="inputCorreoEmpleado" className="form-label">Correo</label>
+                    <input type="email" className="form-control" id="inputCorreoEmpleado" required />
+                  </div>
+
+
+                  <div className="mb-3">
+                    <label htmlFor="inputContraseñaEmpleado" className="form-label">Contraseña</label>
+                    <input type="password" className="form-control" id="inputContraseñaEmpleado" required />
+                  </div>
+
                   <button type="submit" className="btn btn-primary">Agregar</button>
                 </form>
               </div>
             </div>
           </div>
         </div>
-
+  </div>
         {/* Modal para Editar Empleado */}
         <div className="modal fade" id="modalEditarEmpleado" tabIndex="-1" aria-labelledby="modalEditarEmpleadoLabel" aria-hidden="true">
           <div className="modal-dialog">
@@ -126,7 +172,6 @@ function Index() {
         {/* Sección de Control de Asistencia */}
         <section id="asistencia" className="mb-5">
           <h2>Control de Asistencia</h2>
-          <p>Revisión de entradas y salidas de empleados.</p>
           <button className="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalRegistrarAsistencia">Registrar Asistencia</button>
           <table className="table table-bordered">
             <thead>

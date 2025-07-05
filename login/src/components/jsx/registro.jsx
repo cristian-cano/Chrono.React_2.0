@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import '../components/css/registro.css'; 
-import logoCHG from'../components/img/logoCHGcircul.png'
+import '../css/registro.css'; 
+import logoCHG from'../img/logoCHGcircul.png'; // Adjust the path if necessary
 // Assuming you have a CSS file for styling
 
 
