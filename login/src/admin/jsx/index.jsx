@@ -39,9 +39,9 @@ function Index() {
       <div className="container mt-4">
         <h1 className="text-center mb-4" 
         style={{color: 'black',
-          background:'white',
-          
-
+           background: 'linear-gradient(135deg, #36dee4c2 0%,rgb(46, 145, 175) 100%)',
+           padding: '10px',
+           borderRadius: '5px'
         }}>Panel de Administrador</h1>
 
         {/* Sección de Empleados */}
@@ -78,7 +78,7 @@ function Index() {
       <div className="modal-content modal-form-empleado">
         <div className="modal fade" id="modalAgregarEmpleado" tabIndex="-1" aria-labelledby="modalAgregarEmpleadoLabel" aria-hidden="true">
           <div className="modal-dialog">
-            <div className="modal-content modal-form-empleado" style={{ background: 'linear-gradient(135deg, #36dee4c2 0%, #2e3b75 100%)' }}>
+            <div className="modal-content modal-form-empleado" style={{ background: 'linear-gradient(135deg, #36dee4c2 0%,rgb(46, 145, 175) 100%)' }}>
               <div className="modal-header">
                 <h5 className="modal-title" id="modalAgregarEmpleadoLabel" style={{ color: 'white' }}>Agregar Empleado</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -141,10 +141,10 @@ function Index() {
         </div>
   </div>
         {/* Modal para Editar Empleado */}
-        <div className="modal fade" id="modalEditarEmpleado" tabIndex="-1" aria-labelledby="modalEditarEmpleadoLabel" aria-hidden="true">
+        <div className="modal fade" id="modalEditarEmpleado" tabIndex="-1" aria-labelledby="modalEditarEmpleadoLabel" aria-hidden="true" >
           <div className="modal-dialog">
-            <div className="modal-content">
-              <div className="modal-header">
+            <div className="modal-content" style={{ background: 'linear-gradient(135deg,rgba(125, 240, 255, 0.97) 0%,rgb(29, 113, 146)  100%)' }}>
+              <div className="modal-header" >
                 <h5 className="modal-title" id="modalEditarEmpleadoLabel">Editar Empleado</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
@@ -170,7 +170,7 @@ function Index() {
         </div>
 
         {/* Sección de Control de Asistencia */}
-        <section id="asistencia" className="mb-5">
+        <section id="asistencia" className="mb-5" >
           <h2>Control de Asistencia</h2>
           <button className="btn btn-success mb-3" data-bs-toggle="modal" data-bs-target="#modalRegistrarAsistencia">Registrar Asistencia</button>
           <table className="table table-bordered">
@@ -196,9 +196,9 @@ function Index() {
         </section>
 
         {/* Modal para el registro de asistencia */}
-        <div className="modal fade" id="modalRegistrarAsistencia" tabIndex="-1" aria-labelledby="modalRegistrarAsistenciaLabel" aria-hidden="true">
+        <div className="modal fade" id="modalRegistrarAsistencia" tabIndex="-1" aria-labelledby="modalRegistrarAsistenciaLabel" aria-hidden="true" >
           <div className="modal-dialog">
-            <div className="modal-content">
+            <div className="modal-content"style={{ background: 'linear-gradient(135deg,rgba(125, 240, 255, 0.97) 0%,rgb(29, 113, 146)  100%)' }}>
               <div className="modal-header">
                 <h5 className="modal-title" id="modalRegistrarAsistenciaLabel">Registrar Asistencia</h5>
                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
