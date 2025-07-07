@@ -81,6 +81,7 @@ app.post('/admin', async (req, res) => {
     } catch (error) {
         console.error("Error en /admin:", error);
         res.status(500).json({ error: error.message });
+        
     }
 });
 
