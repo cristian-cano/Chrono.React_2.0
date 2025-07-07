@@ -24,7 +24,7 @@ const pool = mysql.createPool({
 app.get('/usuarios', async (req, res) => {
     try {
         const [rows] = await pool.execute(
-            `SELECT u.ID_Usuario, u.Nombre, u.Apellido, u.Correo, r.tipo AS Rol
+            `SELECT u.ID_Usuario, u.Nombre, u.Correo, r.tipo AS Rol
              FROM Usuarios u
              JOIN Roles r ON u.ID_Rol = r.ID_Rol`
         );
@@ -41,9 +41,9 @@ app.post('/admin', async (req, res) => {
     try {
         console.log("Datos recibidos en /admin:", req.body);
 
-        const { nombre, apellido, email, password, rol } = req.body;
+        const { nombre, email, password, rol, numero_de_documento} = req.body;
 
-        if (!nombre || !apellido || !email || !password || !rol) {
+        if (!nombre || !email || !password || !rol || !numero_de_documento) {
             console.log("Faltan datos en el registro:", req.body);
             return res.status(400).json({ error: 'Faltan datos requeridos' });
         }
@@ -60,14 +60,14 @@ app.post('/admin', async (req, res) => {
         const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
 
         const [result] = await pool.execute(
-            'INSERT INTO Usuarios (Nombre, Apellido, Correo, Contraseña, ID_Rol, Numero_de_Documento) VALUES (?, ?, ?, ?, ?, ?)',
-            [nombre, apellido, email, hashedPassword, rol, numero_de_documento]
+            'INSERT INTO Usuarios (Nombre, Correo, Contraseña, ID_Rol, Numero_de_Documento) VALUES (?, ?, ?, ?, ?)',
+            [nombre, email, hashedPassword, rol, numero_de_documento]
         );
 
         console.log("Resultado del INSERT:", result);
 
         if (result.affectedRows === 1) {
-            console.log(`Usuario registrado: ${nombre} ${apellido} (${email})`);
+            console.log(`Usuario registrado: ${nombre} (${email} ${rol} ${numero_de_documento})`);
             const responseJson = {
                 mensaje: 'Usuario registrado exitosamente',
                 id: result.insertId
@@ -95,7 +95,7 @@ app.post('/login', async (req, res) => {
         }
 
         const [rows] = await pool.execute(
-            `SELECT u.ID_Usuario, u.Nombre, u.Apellido, u.Correo, u.Contraseña, r.tipo AS Rol
+            `SELECT u.ID_Usuario, u.Correo, u.Contraseña, r.tipo AS Rol
              FROM Usuarios u
              JOIN Roles r ON u.ID_Rol = r.ID_Rol
              WHERE u.Correo = ?`,
@@ -116,10 +116,9 @@ app.post('/login', async (req, res) => {
         const userData = {
             id: user.ID_Usuario,
             nombre: user.Nombre,
-            apellido: user.Apellido,
             correo: user.Correo,
             rol: user.Rol,
-            numero_de_documento: user.Numero_de_Documento
+            numero_de_documento: user.numero_de_documento
         };
 
         console.log("Usuario logueado:", userData);
