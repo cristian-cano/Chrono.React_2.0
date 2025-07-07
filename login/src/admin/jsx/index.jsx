@@ -3,9 +3,7 @@ import logoCHG from '../../components/img/logoCHGcircul.png';
 import '../css/index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-
-// Si usas jsPDF para reportes, descomenta la siguiente línea e instala jsPDF
-// import { jsPDF } from "jspdf";
+// import { jsPDF } from "jspdf"; // Descomenta si usas jsPDF
 
 function Index() {
   // Estados para empleados y formularios
@@ -14,20 +12,19 @@ function Index() {
   const [showEditar, setShowEditar] = useState(false);
   const [showAsistencia, setShowAsistencia] = useState(false);
   const [showReporte, setShowReporte] = useState(false);
-  
 
-  //mapa de campos correccion handlechange
+  // Mapa de campos para handleChange
   const fieldMap = {
-  inputIdEmpleado: 'id',
-  inputNombreEmpleado: 'nombre',
-  inputApellidoEmpleado: 'apellido',
-  inputDepartamentoEmpleado: 'departamento',
-  inputemailEmpleado: 'email',
-  inputpasswordEmpleado: 'password'
+    inputIdEmpleado: 'id',
+    inputNombreEmpleado: 'nombre',
+    inputApellidoEmpleado: 'apellido',
+    inputDepartamentoEmpleado: 'departamento',
+    inputemailEmpleado: 'email',
+    inputpasswordEmpleado: 'password'
   };
+
   // Empleados y formularios
   const [empleados, setEmpleados] = useState([
-    // Ejemplo inicial, puedes cargar desde backend si lo deseas
     { id: 1, nombre: 'Juan', apellido: 'Pérez', departamento: 'Lavado', rol: 'Empleado' }
   ]);
   const [form, setForm] = useState({
@@ -48,6 +45,7 @@ function Index() {
   // Asistencias y formularios
   const [asistencias, setAsistencias] = useState([]);
   const [formAsistencia, setFormAsistencia] = useState({
+    id: '',
     nombre: '',
     entrada: '',
     salida: '',
@@ -63,19 +61,17 @@ function Index() {
   });
 
   // --- FUNCIONES DE EMPLEADOS ---
-
   const handleChange = (e) => {
-  const { id, value } = e.target;
-  if (id === "inputRolEmpleado") setRol(value);
-  const field = fieldMap[id];
-  if (field) {
-    setForm((prev) => ({
-      ...prev,
-      [field]: value
-    }));
-  }
-};
-
+    const { id, value } = e.target;
+    if (id === "inputRolEmpleado") setRol(value);
+    const field = fieldMap[id];
+    if (field) {
+      setForm((prev) => ({
+        ...prev,
+        [field]: value
+      }));
+    }
+  };
 
   const abrirModalAgregar = () => {
     setShowAgregar(true);
@@ -127,21 +123,20 @@ function Index() {
       } else {
         alert(data.error || "Error al registrar empleado");
       }
-
     } catch (error) {
-  console.error("Error en la petición:", error);
-  alert("Error de conexión con el servidor: " + error.message);
-}
+      console.error("Error en la petición:", error);
+      alert("Error de conexión con el servidor: " + error.message);
+    }
   };
 
   // --- FUNCIONES DE EDICIÓN ---
-
   const abrirModalEditar = (emp) => {
     setEditForm({
       nombre: emp.nombre,
       apellido: emp.apellido,
-      correo: emp.email,
-      departamento: emp.departamento
+      email: emp.email,
+      departamento: emp.departamento,
+      id: emp.id
     });
     setShowEditar(true);
   };
@@ -153,7 +148,7 @@ function Index() {
     setEmpleados(emps =>
       emps.map(emp =>
         emp.id === editForm.id
-          ? { ...emp, nombre: editForm.nombre, departamento: editForm.departamento }
+          ? { ...emp, nombre: editForm.nombre, apellido: editForm.apellido, email: editForm.email, departamento: editForm.departamento }
           : emp
       )
     );
@@ -161,7 +156,6 @@ function Index() {
   };
 
   // --- FUNCIONES DE ELIMINAR ---
-
   const eliminarEmpleado = (id) => {
     if (window.confirm("¿Está seguro de eliminar este empleado?")) {
       setEmpleados(emps => emps.filter(emp => emp.id !== id));
@@ -169,7 +163,6 @@ function Index() {
   };
 
   // --- FUNCIONES DE ASISTENCIA ---
-
   const handleAsistenciaChange = (e) => {
     const { id, value } = e.target;
     setFormAsistencia((prev) => ({
@@ -192,7 +185,6 @@ function Index() {
   };
 
   // --- FUNCIONES DE REPORTE ---
-
   const handleReporteChange = (e) => {
     const { id, value } = e.target;
     setFormReporte((prev) => ({
@@ -316,7 +308,7 @@ function Index() {
                       <input type="text" className="form-control" id="inputNombreEmpleado" value={form.nombre} onChange={handleChange} required />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="inputApellidosEmpleado" className="form-label">Apellidos</label>
+                      <label htmlFor="inputApellidoEmpleado" className="form-label">Apellidos</label>
                       <input type="text" className="form-control" id="inputApellidoEmpleado" value={form.apellido} onChange={handleChange} required />
                     </div>
                     <div className="mb-3">
