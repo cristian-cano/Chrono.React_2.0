@@ -45,11 +45,13 @@ function Login({ show, onClose }) {
       setError('');
       // Si login exitoso, redirige al index de admin
       if (data.rol === 'admin') {
-        navigate('/admin');
+          localStorage.setItem("id_usuario", data.id_usuario); // o data.id si ese es el nombre correcto
+          navigate('/admin');
         } else if (data.rol === 'empleado') {
-        navigate('/empleado'); // Asegúrate de tener esta ruta
+          localStorage.setItem("id_usuario", data.id_usuario); // o data.id
+          navigate('/empleado'); // Asegúrate de tener esta ruta
         } else {
-        setError('Rol no reconocido');
+          setError('Rol no reconocido');
       }
 
     } catch (err) {

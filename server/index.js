@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'SENA123',
+    password: process.env.DB_PASSWORD || '1000991521',
     database: process.env.DB_NAME || 'ChronoDB_db',
     waitForConnections: true,
     connectionLimit: 10,
@@ -145,3 +145,5 @@ app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });
 console.log('Después de app.listen');
+
+

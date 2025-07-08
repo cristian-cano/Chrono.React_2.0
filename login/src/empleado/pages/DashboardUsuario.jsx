@@ -1,12 +1,22 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { FaEnvelopeOpenText, FaClock, FaCalendarAlt, FaBell } from "react-icons/fa";
+import { FaEnvelopeOpenText, FaSignOutAlt, FaClock, FaCalendarAlt, FaBell } from "react-icons/fa";
 import logoCHG from "../../components/img/logoCHGcircul.png";
+import { useEffect } from "react";
 
 
 function DashboardUsuario() {
   const navigate = useNavigate();
+
+  useEffect(() => {
+  const idUsuario = localStorage.getItem("id_usuario");
+  if (!idUsuario) {
+    navigate("/", { replace: true }); // Redirige si no hay sesión activa
+  }
+}, []);
+
   const location = useLocation();
+  
 
   const styles = {
     root: {
@@ -98,6 +108,22 @@ function DashboardUsuario() {
       marginBottom: "1.2rem",
       color: "#333",
     },
+
+    logoutButton: {
+      marginTop: "auto", // Empuja el botón hacia abajo
+      backgroundColor: "#ef4444",
+      padding: "12px 20px",
+      color: "#fff",
+      border: "none",
+      borderRadius: "12px",
+      fontSize: "16px",
+      cursor: "pointer",
+      display: "flex",
+      alignItems: "center",
+      gap: "10px",
+      transition: "background-color 0.3s",
+    },
+
     button: (color) => ({
       padding: "10px 16px",
       fontSize: "14px",
@@ -136,6 +162,18 @@ function DashboardUsuario() {
             );
           })}
         </div>
+
+            <button
+              style={styles.logoutButton}
+              onClick={() => {
+                localStorage.clear(); // Borra todo (o usa removeItem si prefieres)
+                navigate("/", { replace: true }); // Replace evita volver con la flecha atrás
+              }}
+            >
+              <FaSignOutAlt />
+              Salir
+            </button>
+
       </aside>
 
       <main style={styles.content}>

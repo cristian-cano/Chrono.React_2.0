@@ -3,6 +3,9 @@
   import '../css/index.css';
   import '@fortawesome/fontawesome-free/css/all.min.css';
   import 'bootstrap/dist/css/bootstrap.min.css';
+  import { useEffect } from "react";
+  import { useNavigate } from "react-router-dom";
+
   // import { jsPDF } from "jspdf"; // Descomenta si usas jsPDF
 
   function Index() {
@@ -56,6 +59,15 @@
       empleado: '',
       estado: ''
     });
+
+    const navigate = useNavigate();
+
+    useEffect(() => {
+      const idUsuario = localStorage.getItem("id_usuario");
+      if (!idUsuario) {
+        navigate("/", { replace: true }); // Redirige si no hay sesión activa
+      }
+    }, []);
 
     // --- FUNCIONES DE EMPLEADOS ---
     const handleChange = (e) => {
@@ -234,8 +246,18 @@
                   <a className="nav-link" href="#reportes">Reportes</a>
                 </li>
                 <li className="nav-item">
-                  <a className="nav-link" href="http://localhost:5173/">Salir</a>
+                  <button
+                    className="nav-link btn btn-link"
+                    style={{ color: 'white', textDecoration: 'none' }}
+                    onClick={() => {
+                      localStorage.removeItem("id_usuario");
+                      navigate("/", { replace: true });
+                    }}
+                  >
+                    Salir
+                  </button>
                 </li>
+
               </ul>
             </div>
           </div>
