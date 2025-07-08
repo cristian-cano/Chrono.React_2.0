@@ -13,7 +13,11 @@ app.use(bodyParser.json());
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
+<<<<<<< HEAD
     password: process.env.DB_PASSWORD || '1000991521',
+=======
+    password: process.env.DB_PASSWORD || 'SENA123',
+>>>>>>> cf9c4e96f49c5d0fc768ae56067e5ece1a6313d1
     database: process.env.DB_NAME || 'ChronoDB_db',
     waitForConnections: true,
     connectionLimit: 10,
@@ -81,6 +85,10 @@ app.post('/admin', async (req, res) => {
     } catch (error) {
         console.error("Error en /admin:", error);
         res.status(500).json({ error: error.message });
+<<<<<<< HEAD
+=======
+        
+>>>>>>> cf9c4e96f49c5d0fc768ae56067e5ece1a6313d1
     }
 });
 

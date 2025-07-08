@@ -113,13 +113,19 @@
             nombre: form.nombre,
             departamento: form.departamento,
             email: form.email,
-            rol: form.rol,
+            rol: getRolTexto(rolId),
             numero_de_documento: form.numero_de_documento
           }]);
           cerrarModalAgregar();
         } else {
           alert(data.error || "Error al registrar empleado");
         }
+        function getRolTexto(rolId) {
+          if (rolId === 1 || rolId === "1" || rol === "Administrador") return "Administrador";
+          if (rolId === 2 || rolId === "2" || rol === "Secretaria") return "Secretaria";
+          if (rolId === 3 || rolId === "3" || rol === "Empleado") return "Empleado";
+            return "Desconocido";
+              }
       } catch (error) {
         console.error("Error en la petición:", error);
         alert("Error de conexión con el servidor: " + error.message);
@@ -255,6 +261,11 @@
                   <th>Nombre</th>
                   <th>Departamento</th>
                   <th>Rol</th>
+                  <th>Numero de Documento</th>
+                  <th>Nombre</th>
+                  <th>Departamento</th>
+                  <th>Rol</th>
+                  <th>Correo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
@@ -265,6 +276,12 @@
                     <td>{emp.nombre}</td>
                     <td>{emp.departamento}</td>
                     <td>{emp.rol}</td>
+                    <td>{emp.numero_de_documento}</td>
+                    <td>{emp.nombre}</td>
+                    <td>{emp.departamento || "N/A"}</td>
+                    <td>{emp.rol}</td>
+                    <td>{emp.email}</td>
+
                     <td>
                       <button className="btn btn-warning btn-sm me-1"
                         onClick={() => abrirModalEditar(emp)}

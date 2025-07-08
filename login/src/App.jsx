@@ -7,10 +7,16 @@ import Horarios from "./empleado/pages/Horarios";
 import Notificaciones from "./empleado/pages/Notificaciones";
 import AdminIndex from './admin/jsx/index';
 import Login from './components/jsx/login';
-import './App.css'
+import './App.css';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
 
 function App() {
   return (
+    
+    
+
     <Router>
       <Routes>
         <Route path="/" element={<Home />} />
@@ -29,3 +35,4 @@ function App() {
 }
 
 export default App;
+

@@ -17,8 +17,14 @@
     "cors": "^2.8.5",
     "dotenv": "^17.0.1",
     "express": "^5.1.0",
+<<<<<<< HEAD
     "mysql2": "^3.14.1",
     "nodemon": "^3.1.10",
     "react-router-dom": "^7.6.3"
+=======
+    "jsonwebtoken": "^9.0.2",
+    "mysql2": "^3.14.1",
+    "nodemon": "^3.1.10"
+>>>>>>> cf9c4e96f49c5d0fc768ae56067e5ece1a6313d1
   }
 }

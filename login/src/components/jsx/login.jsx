@@ -15,7 +15,11 @@ function Login({ show, onClose }) {
     e.preventDefault();
 
     try {
+<<<<<<< HEAD
        const response = await fetch('/usuario/login', {
+=======
+      const response = await fetch('http://localhost:5170/login', {
+>>>>>>> cf9c4e96f49c5d0fc768ae56067e5ece1a6313d1
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -43,6 +47,7 @@ function Login({ show, onClose }) {
       setSuccessMessage(`¡Bienvenido, ${data.nombre} (${data.rol})!`);
       setError('');
       // Si login exitoso, redirige al index de admin
+<<<<<<< HEAD
       if (data.rol === 'admin') {
         navigate('/admin');
         } else if (data.rol === 'empleado') {
@@ -51,6 +56,9 @@ function Login({ show, onClose }) {
         setError('Rol no reconocido');
       }
 
+=======
+      navigate('/admin');
+>>>>>>> cf9c4e96f49c5d0fc768ae56067e5ece1a6313d1
     } catch (err) {
       setError('Error en la conexión con el servidor');
       setSuccessMessage('');
