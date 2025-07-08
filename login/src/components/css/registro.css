@@ -1,0 +1,102 @@
+* {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background-color: rgb(254, 255, 252);
+}
+
+#root {
+  width: 100%; /* Cambia max-width a width */
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+.datos {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  background: linear-gradient(135deg, #78d9ff 0%, #030f36 100%);
+  width: 40%; 
+  height: 80vh;
+  margin: auto; 
+  border-radius: 7%;
+}
+
+form {
+  display: flex;
+  flex-direction: column; /* Asegura que los elementos estén en columna */
+  align-items: center; /* Centra los elementos horizontalmente */
+  border-radius: 10px;
+  background-color: rgb(255, 255, 255);
+  margin-left:  20% ;
+  margin-right: 20%;
+  justify-content:  center; /* Centra los elementos verticalmente */
+}
+
+form label {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  display: flex;
+  
+ 
+  margin: 10px 30px 10px 30px;
+  color: black;
+  transition: all 1s ease;
+  display: flex;
+  text-align: start;       
+  
+}
+
+form input:hover{
+    transition: all 1s ease;    
+    background: #c7c6c6;
+    transform: translate(x, -5px);
+    color: black solid;
+    border: #000920 2px solid;
+   
+}
+
+form input {
+  margin: 5px;
+  padding: 10px;
+  margin-top: 3px;
+   text-align: start;
+}
+
+.agregar {
+  margin: auto; /* Centra el botón */
+  padding: 5px 10px;
+  display: block; /* Cambia a block para que el margen funcione */
+  border-radius: 3px;
+  border: #000000 1px solid;
+  color: white;
+  cursor: pointer; 
+  height: 40px;
+  width: 120px;
+  font-size: 20px;
+    background: linear-gradient(135deg, #78d9ff 0%, #030f36 100%);
+    border-radius: 3px ;
+    
+}
+
+button:hover {
+  background-color: #45a049;
+  color: white;
+  transition: all 0.3s ease;
+  height: 43px;
+  width: 125px  ;
+}
+
+img{
+    height: 15%;
+    background: none;
+    margin-top: 2%;
+    margin-bottom: -3%;
+    display: flex;
+    justify-content: end;
+}
+
+h2{
+    background: none;
+}
