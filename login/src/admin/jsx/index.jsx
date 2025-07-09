@@ -97,7 +97,7 @@ function Index() {
     }
   };
 
-  
+
 
   // Cargar usuarios al montar el componente
   useEffect(() => {
@@ -211,9 +211,22 @@ function Index() {
   };
 
 // --- FUNCIONES DE ELIMINAR ---
-const eliminarEmpleado = (id) => {
-  if (window.confirm("¿Está seguro de eliminar este empleado SOLO en la vista?")) {
-    setEmpleados(prevEmpleados => prevEmpleados.filter(emp => emp.id !== id));
+const eliminarEmpleado = async (id) => {
+  if (window.confirm("¿Está seguro de inactivar este empleado?")) {
+    try {
+      // Cambia el estado en la base de datos
+      const response = await fetch(`http://localhost:5170/usuarios/inactivar/${id}`, {
+        method: "PUT"
+      });
+      if (response.ok) {
+        // Elimina visualmente del frontend
+        setEmpleados(prevEmpleados => prevEmpleados.filter(emp => emp.id !== id));
+      } else {
+        alert("Error al inactivar usuario");
+      }
+    } catch (error) {
+      alert("Error al conectar con el servidor: " + error.message);
+    }
   }
 };
 
