@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import logoCHG from '../../components/img/logoCHGcircul.png';
-import '../css/index.css';
+import logoCHG from '../components/img/logoCHGcircul.png';
+import './secretariapanel.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
 

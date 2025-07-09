@@ -7,6 +7,11 @@ function DashboardUsuario() {
   const navigate = useNavigate();
   const location = useLocation();
   const [usuario, setUsuario] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [oldPass, setOldPass] = useState('');
+  const [newPass, setNewPass] = useState('');
+  const [confirmPass, setConfirmPass] = useState('');
+  const [msg, setMsg] = useState('');
 
   useEffect(() => {
     const idUsuario = localStorage.getItem("id_usuario");
@@ -20,7 +25,42 @@ function DashboardUsuario() {
       .then((res) => res.json())
       .then((data) => setUsuario(data))
       .catch((error) => console.error("Error al obtener usuario:", error));
-  }, []);
+  }, [navigate]);
+
+  const handleChangePassword = async () => {
+    setMsg('');
+    if (!oldPass || !newPass || !confirmPass) {
+      setMsg('Completa todos los campos.');
+      return;
+    }
+    if (newPass !== confirmPass) {
+      setMsg('Las contraseñas nuevas no coinciden.');
+      return;
+    }
+    try {
+      const res = await fetch('http://localhost:5170/empleado/cambiar-contrasena', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          id: usuario.id,
+          oldPassword: oldPass,
+          newPassword: newPass
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        setMsg('Contraseña actualizada correctamente.');
+        setOldPass('');
+        setNewPass('');
+        setConfirmPass('');
+        setTimeout(() => setShowModal(false), 1500);
+      } else {
+        setMsg(data.error || 'Error al actualizar la contraseña.');
+      }
+    } catch {
+      setMsg('Error de conexión.');
+    }
+  };
 
   const styles = {
     root: {
@@ -202,6 +242,17 @@ function DashboardUsuario() {
                 </button>
               );
             })}
+            <button
+              style={{
+                ...styles.menuItem(false),
+                backgroundColor: "#10b981",
+                color: "#fff",
+                marginTop: "1rem"
+              }}
+              onClick={() => setShowModal(true)}
+            >
+              Editar Contraseña
+            </button>
           </div>
           <button
             style={styles.logoutButton}
@@ -235,6 +286,57 @@ function DashboardUsuario() {
           </div>
         </main>
       </div>
+
+      {/* Modal para cambiar contraseña */}
+      {showModal && (
+        <div style={{
+          position: "fixed", top: 0, left: 0, width: "100vw", height: "100vh",
+          background: "rgba(0,0,0,0.3)", display: "flex", alignItems: "center", justifyContent: "center", zIndex: 9999
+        }}>
+          <div style={{
+            background: "#fff", borderRadius: "16px", padding: "2rem", minWidth: "320px",
+            boxShadow: "0 8px 32px rgba(0,0,0,0.18)", display: "flex", flexDirection: "column", alignItems: "center"
+          }}>
+            <h3 style={{ marginBottom: "1rem", color: "#0077b6" }}>Editar Contraseña</h3>
+            <input
+              type="password"
+              placeholder="Contraseña actual"
+              value={oldPass}
+              onChange={e => setOldPass(e.target.value)}
+              style={{ marginBottom: "1rem", padding: "10px", borderRadius: "8px", border: "1px solid #cbd5e1", width: "100%" }}
+            />
+            <input
+              type="password"
+              placeholder="Nueva contraseña"
+              value={newPass}
+              onChange={e => setNewPass(e.target.value)}
+              style={{ marginBottom: "1rem", padding: "10px", borderRadius: "8px", border: "1px solid #cbd5e1", width: "100%" }}
+            />
+            <input
+              type="password"
+              placeholder="Confirmar nueva contraseña"
+              value={confirmPass}
+              onChange={e => setConfirmPass(e.target.value)}
+              style={{ marginBottom: "1rem", padding: "10px", borderRadius: "8px", border: "1px solid #cbd5e1", width: "100%" }}
+            />
+            {msg && <div style={{ color: msg.includes('correcta') ? "#10b981" : "#ef4444", marginBottom: "1rem" }}>{msg}</div>}
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button
+                style={{ background: "#10b981", color: "#fff", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: "bold", cursor: "pointer" }}
+                onClick={handleChangePassword}
+              >
+                Guardar
+              </button>
+              <button
+                style={{ background: "#ef4444", color: "#fff", border: "none", borderRadius: "8px", padding: "10px 20px", fontWeight: "bold", cursor: "pointer" }}
+                onClick={() => { setShowModal(false); setMsg(''); setOldPass(''); setNewPass(''); setConfirmPass(''); }}
+              >
+                Cancelar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }

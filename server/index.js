@@ -9,16 +9,16 @@
     app.use(cors());
     app.use(bodyParser.json());
 
-    // Configuración de MySQL
-    const pool = mysql.createPool({
-        host: process.env.DB_HOST || 'localhost',
-        user: process.env.DB_USER || 'root',
-        password: process.env.DB_PASSWORD || 'SENA123',
-        database: process.env.DB_NAME || 'ChronoDB_db',
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0
-    });
+// Configuración de MySQL
+const pool = mysql.createPool({
+    host: process.env.DB_HOST || 'localhost',
+    user: process.env.DB_USER || 'root',
+    password: process.env.DB_PASSWORD || 'SENA123',
+    database: process.env.DB_NAME || 'ChronoDB_db',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
+});
 
     // Obtener todos los usuarios
     app.get('/usuarios', async (req, res) => {
@@ -255,18 +255,18 @@
                 return res.status(401).json({ error: 'Contraseña incorrecta' });
             }
 
-            const userData = {
-                id: user.ID_Usuario,
-                nombre: user.Nombre,
-                correo: user.Correo,
-                rol: user.Rol, // numérico: 1, 2, 3
-                numero_de_documento: user.Numero_de_Documento
-            };
-            res.json(userData);
-        } catch (error) {
-            res.status(500).json({ error: error.message });
-        }
-    });
+        const userData = {
+            id: user.ID_Usuario,
+            nombre: user.Nombre,
+            correo: user.Correo,
+            rol: user.Rol, // numérico: 1, 2, 3
+            numero_de_documento: user.Numero_de_Documento
+        };
+        res.json(userData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
 
     // Middleware de manejo de errores global
     app.use((err, req, res, next) => {

@@ -24,11 +24,11 @@ function Login({ show, onClose }) {
       });
 
       const text = await response.text();
-      console.log("Texto recibido del backend:", text); 
+       console.log("Texto recibido del backend:", text); // 👈 añade esto
       let data = {};
       try {
         data = text ? JSON.parse(text) : {};
-        console.log("JSON parseado:", data); 
+        console.log("JSON parseado:", data); // 👈 añade esto
       } catch {
         setError('Respuesta inválida del servidor');
         setSuccessMessage('');
@@ -44,16 +44,13 @@ function Login({ show, onClose }) {
       setSuccessMessage(`¡Bienvenido, ${data.nombre} (${data.rol})!`);
       setError('');
 
-      // Corrección aquí: guardar correctamente el ID recibido como "data.id"
+      // 🔄 Corrección aquí: guardar correctamente el ID recibido como "data.id"
       localStorage.setItem("id_usuario", data.id);
-      localStorage.setItem("rol_usuario", data.rol); // <-- Añadido para validación posterior
 
-      // Navegar según el rol (corregido para aceptar número o string)
-      if (data.rol === 1 || data.rol === "1") {
+      // Navegar según el rol
+      if (data.rol === 'admin') {
         navigate('/admin');
-      } else if (data.rol === 2 || data.rol === "2") {
-        navigate('/secretaria');
-      } else if (data.rol === 3 || data.rol === "3") {
+      } else if (data.rol === 'empleado') {
         navigate('/empleado');
       } else {
         setError('Rol no reconocido');
