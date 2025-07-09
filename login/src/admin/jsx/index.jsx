@@ -3,7 +3,15 @@ import logoCHG from '../../components/img/logoCHGcircul.png';
 import '../css/index.css';
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import { jsPDF } from "jspdf"; // Descomenta si usas jsPDF
+import { useNavigate } from "react-router-dom";
+
+// Función para mostrar el texto del rol
+function getRolTexto(rol) {
+  if (rol === 1 || rol === "1" || rol === "Administrador") return "Administrador";
+  if (rol === 2 || rol === "2" || rol === "Secretaria") return "Secretaria";
+  if (rol === 3 || rol === "3" || rol === "Empleado") return "Empleado";
+  return "Desconocido";
+}
 
 function Index() {
   // Estados para empleados y formularios
@@ -35,7 +43,10 @@ function Index() {
   const [editForm, setEditForm] = useState({
     nombre: '',
     email: '',
-    departamento: ''
+    departamento: '',
+    rol: '',
+    numero_de_documento: '',
+    id: ''
   });
 
   // Asistencias y formularios
@@ -56,6 +67,16 @@ function Index() {
     estado: ''
   });
 
+  const navigate = useNavigate();
+
+  // Verificar sesión activa
+  useEffect(() => {
+    const idUsuario = localStorage.getItem("id_usuario");
+    if (!idUsuario) {
+      navigate("/", { replace: true });
+    }
+  }, [navigate]);
+
   // Función para obtener usuarios del backend
   const fetchUsuarios = async () => {
     try {
@@ -68,7 +89,7 @@ function Index() {
           email: u.Correo,
           rol: u.Rol,
           numero_de_documento: u.Numero_de_Documento || '',
-          departamento: u.Departamento || '', // Por si tienes este campo en la BD
+          departamento: u.Departamento || '',
         }))
       );
     } catch (error) {
@@ -133,7 +154,7 @@ function Index() {
       if (response.ok) {
         alert("Empleado registrado exitosamente");
         cerrarModalAgregar();
-        fetchUsuarios(); // Refresca la lista desde la base de datos
+        fetchUsuarios();
       } else {
         alert(data.error || "Error al registrar empleado");
       }
@@ -149,6 +170,7 @@ function Index() {
       nombre: emp.nombre,
       email: emp.email,
       departamento: emp.departamento,
+      rol: getRolTexto(emp.rol),
       numero_de_documento: emp.numero_de_documento,
       id: emp.id
     });
@@ -157,24 +179,50 @@ function Index() {
 
   const cerrarModalEditar = () => setShowEditar(false);
 
-  const handleEditSubmit = (e) => {
+  const handleEditSubmit = async (e) => {
     e.preventDefault();
-    setEmpleados(emps =>
-      emps.map(emp =>
-        emp.id === editForm.id
-          ? { ...emp, nombre: editForm.nombre, email: editForm.email, departamento: editForm.departamento, numero_de_documento: editForm.numero_de_documento }
-          : emp
-      )
-    );
-    cerrarModalEditar();
-    // Aquí deberías hacer la petición al backend para actualizar el usuario en la base de datos
+    let rolId = 3;
+    if (editForm.rol === "Administrador") rolId = 1;
+    else if (editForm.rol === "Secretaria") rolId = 2;
+
+    try {
+      const response = await fetch(`http://localhost:5170/usuarios/${editForm.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombre: editForm.nombre,
+          email: editForm.email,
+          rol: rolId,
+          departamento: editForm.rol === "Empleado" ? editForm.departamento : "",
+          numero_de_documento: editForm.numero_de_documento
+        })
+      });
+      if (response.ok) {
+        await fetchUsuarios();
+        cerrarModalEditar();
+      } else {
+        alert("Error al actualizar usuario");
+      }
+    } catch (error) {
+      alert("Error al conectar con el servidor: " + error.message);
+    }
   };
 
   // --- FUNCIONES DE ELIMINAR ---
-  const eliminarEmpleado = (id) => {
+  const eliminarEmpleado = async (id) => {
     if (window.confirm("¿Está seguro de eliminar este empleado?")) {
-      setEmpleados(emps => emps.filter(emp => emp.id !== id));
-      // Aquí deberías hacer la petición al backend para eliminar el usuario en la base de datos
+      try {
+        const response = await fetch(`http://localhost:5170/usuarios/${id}`, {
+          method: "DELETE"
+        });
+        if (response.ok) {
+          await fetchUsuarios();
+        } else {
+          alert("Error al eliminar usuario");
+        }
+      } catch (error) {
+        alert("Error al conectar con el servidor: " + error.message);
+      }
     }
   };
 
@@ -221,14 +269,6 @@ function Index() {
     });
   };
 
-  // Para mostrar el texto del rol
-  function getRolTexto(rolId) {
-    if (rolId === 1 || rolId === "1" || rol === "Administrador") return "Administrador";
-    if (rolId === 2 || rolId === "2" || rol === "Secretaria") return "Secretaria";
-    if (rolId === 3 || rolId === "3" || rol === "Empleado") return "Empleado";
-    return "Desconocido";
-  }
-
   return (
     <div className='contenedor'>
       <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -255,7 +295,16 @@ function Index() {
                 <a className="nav-link" href="#reportes">Reportes</a>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="http://localhost:5173/">Salir</a>
+                <button
+                  className="nav-link btn btn-link"
+                  style={{ color: 'white', textDecoration: 'none' }}
+                  onClick={() => {
+                    localStorage.removeItem("id_usuario");
+                    navigate("/", { replace: true });
+                  }}
+                >
+                  Salir
+                </button>
               </li>
             </ul>
           </div>
@@ -386,17 +435,33 @@ function Index() {
                 <div className="modal-body">
                   <form onSubmit={handleEditSubmit}>
                     <div className="mb-3">
-                      <label htmlFor="editNombreEmpleado" className="form-label">Nombre</label>
-                      <input type="text" className="form-control" id="editNombreEmpleado" value={editForm.nombre} onChange={e => setEditForm(f => ({ ...f, nombre: e.target.value }))} required />
+                      <label className="form-label">Nombre</label>
+                      <input type="text" className="form-control" value={editForm.nombre} onChange={e => setEditForm(f => ({ ...f, nombre: e.target.value }))} required />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="editEmailEmpleado" className="form-label">Correo</label>
-                      <input type="email" className="form-control" id="editEmailEmpleado" value={editForm.email} onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))} required />
+                      <label className="form-label">Correo</label>
+                      <input type="email" className="form-control" value={editForm.email} onChange={e => setEditForm(f => ({ ...f, email: e.target.value }))} required />
                     </div>
                     <div className="mb-3">
-                      <label htmlFor="editDepartamentoEmpleado" className="form-label">Departamento</label>
-                      <input type="text" className="form-control" id="editDepartamentoEmpleado" value={editForm.departamento} onChange={e => setEditForm(f => ({ ...f, departamento: e.target.value }))} required />
+                      <label className="form-label">Rol</label>
+                      <select className="form-select" value={editForm.rol} onChange={e => setEditForm(f => ({ ...f, rol: e.target.value }))} required>
+                        <option value="Administrador">Administrador</option>
+                        <option value="Secretaria">Secretaria</option>
+                        <option value="Empleado">Empleado</option>
+                      </select>
                     </div>
+                    {editForm.rol === "Empleado" && (
+                      <div className="mb-3">
+                        <label className="form-label">Departamento</label>
+                        <select className="form-select" value={editForm.departamento} onChange={e => setEditForm(f => ({ ...f, departamento: e.target.value }))} required>
+                          <option value="">Seleccione un departamento</option>
+                          <option value="Lavado">Lavado</option>
+                          <option value="Planchado">Planchado</option>
+                          <option value="Secado">Secado</option>
+                          <option value="Transporte">Transporte</option>
+                        </select>
+                      </div>
+                    )}
                     <button type="submit" className="btn btn-primary">Guardar Cambios</button>
                   </form>
                 </div>
