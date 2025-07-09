@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 const pool = mysql.createPool({
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || 'SENA123',
+    password: process.env.DB_PASSWORD || '1000991521',
     database: process.env.DB_NAME || 'ChronoDB_db',
     waitForConnections: true,
     connectionLimit: 10,
@@ -243,10 +243,40 @@ app.post('/login', async (req, res) => {
             id: user.ID_Usuario,
             nombre: user.Nombre,
             correo: user.Correo,
-            rol: user.Rol, // numérico: 1, 2, 3
+            rol: user.Rol == 1 ? 'admin' : user.Rol == 2 ? 'secretaria' : 'empleado',
             numero_de_documento: user.Numero_de_Documento
         };
         res.json(userData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
+});
+
+app.post('/empleado/cambiar-contrasena', async (req, res) => {
+    try {
+        const { id, oldPassword, newPassword } = req.body;
+        if (!id || !oldPassword || !newPassword) {
+            return res.status(400).json({ error: 'Faltan datos requeridos' });
+        }
+        // Verifica la contraseña actual
+        const [rows] = await pool.execute(
+            'SELECT Contraseña FROM Usuarios WHERE ID_Usuario = ?',
+            [id]
+        );
+        if (rows.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+        const hashedOld = require('crypto').createHash('md5').update(oldPassword).digest('hex');
+        if (rows[0].Contraseña !== hashedOld) {
+            return res.status(401).json({ error: 'Contraseña actual incorrecta' });
+        }
+        // Actualiza la contraseña
+        const hashedNew = require('crypto').createHash('md5').update(newPassword).digest('hex');
+        await pool.execute(
+            'UPDATE Usuarios SET Contraseña = ? WHERE ID_Usuario = ?',
+            [hashedNew, id]
+        );
+        res.json({ success: true });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
