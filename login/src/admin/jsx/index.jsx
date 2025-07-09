@@ -7,10 +7,9 @@ import { useNavigate } from "react-router-dom";
 
 // Función para mostrar el texto del rol
 function getRolTexto(rol) {
-  if (rol === 1 || rol === "1" || rol === "Administrador") return "Administrador";
   if (rol === 2 || rol === "2" || rol === "Secretaria") return "Secretaria";
   if (rol === 3 || rol === "3" || rol === "Empleado") return "Empleado";
-  return "Desconocido";
+  return "Administrador";
 }
 
 function Index() {
@@ -85,13 +84,14 @@ function Index() {
       setEmpleados(
         data.map(u => ({
           id: u.ID_Usuario,
+          numero_de_documento: u.Numero_de_Documento || '',
           nombre: u.Nombre,
           email: u.Correo,
           rol: u.Rol,
-          numero_de_documento: u.Numero_de_Documento || '',
-          departamento: u.Departamento || '',
+          departamento: u.Departamento || '', // Ahora será el nombre textual
         }))
       );
+
     } catch (error) {
       alert("Error al obtener usuarios: " + error.message);
     }
@@ -208,23 +208,12 @@ function Index() {
     }
   };
 
-  // --- FUNCIONES DE ELIMINAR ---
-  const eliminarEmpleado = async (id) => {
-    if (window.confirm("¿Está seguro de eliminar este empleado?")) {
-      try {
-        const response = await fetch(`http://localhost:5170/usuarios/${id}`, {
-          method: "DELETE"
-        });
-        if (response.ok) {
-          await fetchUsuarios();
-        } else {
-          alert("Error al eliminar usuario");
-        }
-      } catch (error) {
-        alert("Error al conectar con el servidor: " + error.message);
-      }
-    }
-  };
+// --- FUNCIONES DE ELIMINAR ---
+const eliminarEmpleado = (id) => {
+  if (window.confirm("¿Está seguro de eliminar este empleado SOLO en la vista?")) {
+    setEmpleados(prevEmpleados => prevEmpleados.filter(emp => emp.id !== id));
+  }
+};
 
   // --- FUNCIONES DE ASISTENCIA ---
   const handleAsistenciaChange = (e) => {

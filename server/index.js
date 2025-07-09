@@ -24,14 +24,18 @@ const pool = mysql.createPool({
 app.get('/usuarios', async (req, res) => {
     try {
         const [rows] = await pool.execute(
-            `SELECT u.ID_Usuario, u.Nombre, u.Correo, r.tipo AS Rol
-             FROM Usuarios u
-             JOIN Roles r ON u.ID_Rol = r.ID_Rol`
+            `SELECT 
+                u.ID_Usuario, 
+                u.Nombre, 
+                u.Correo, 
+                u.Numero_de_Documento, 
+                u.ID_Rol AS Rol,
+                d.tipo AS Departamento
+            FROM Usuarios u
+            LEFT JOIN Departamento d ON u.id_departamento = d.id_departamento`
         );
-        console.log("Usuarios enviados al frontend:", rows);
         res.json(rows);
     } catch (error) {
-        console.error("Error al obtener usuarios:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -39,12 +43,9 @@ app.get('/usuarios', async (req, res) => {
 // Registrar nuevo usuario
 app.post('/admin', async (req, res) => {
     try {
-        console.log("Datos recibidos en /admin:", req.body);
-
-        const { nombre, email, password, rol, numero_de_documento} = req.body;
+        const { nombre, email, password, rol, numero_de_documento, departamento } = req.body;
 
         if (!nombre || !email || !password || !rol || !numero_de_documento) {
-            console.log("Faltan datos en el registro:", req.body);
             return res.status(400).json({ error: 'Faltan datos requeridos' });
         }
 
@@ -53,33 +54,62 @@ app.post('/admin', async (req, res) => {
             [email]
         );
         if (existingUser.length > 0) {
-            console.log("Correo ya registrado:", email);
             return res.status(400).json({ error: 'El correo ya está registrado' });
         }
 
         const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
 
+        // Buscar el id_departamento si el departamento viene informado
+        let id_departamento = null;
+        if (departamento) {
+            const [depRows] = await pool.execute(
+                'SELECT id_departamento FROM Departamento WHERE tipo = ?',
+                [departamento]
+            );
+            if (depRows.length > 0) {
+                id_departamento = depRows[0].id_departamento;
+            }
+        }
+
         const [result] = await pool.execute(
-            'INSERT INTO Usuarios (Nombre, Correo, Contraseña, ID_Rol, Numero_de_Documento) VALUES (?, ?, ?, ?, ?)',
-            [nombre, email, hashedPassword, rol, numero_de_documento]
+            'INSERT INTO Usuarios (Nombre, Correo, Contraseña, ID_Rol, Numero_de_Documento, id_departamento) VALUES (?, ?, ?, ?, ?, ?)',
+            [nombre, email, hashedPassword, rol, numero_de_documento, id_departamento]
         );
 
-        console.log("Resultado del INSERT:", result);
-
         if (result.affectedRows === 1) {
-            console.log(`Usuario registrado: ${nombre} (${email} ${rol} ${numero_de_documento})`);
-            const responseJson = {
-                mensaje: 'Usuario registrado exitosamente',
-                id: result.insertId
-            };
-            console.log("JSON enviado al frontend:", responseJson);
-            res.status(201).json(responseJson);
+            res.status(201).json({ mensaje: 'Usuario registrado exitosamente', id: result.insertId });
         } else {
-            console.error("No se pudo insertar el usuario:", req.body);
             res.status(500).json({ error: 'No se pudo insertar el usuario' });
         }
     } catch (error) {
-        console.error("Error en /admin:", error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// Editar usuario
+app.put('/usuarios/:id', async (req, res) => {
+    try {
+        const { nombre, email, rol, numero_de_documento, departamento } = req.body;
+        const { id } = req.params;
+
+        // Buscar el id_departamento si el departamento viene informado
+        let id_departamento = null;
+        if (departamento) {
+            const [depRows] = await pool.execute(
+                'SELECT id_departamento FROM Departamento WHERE tipo = ?',
+                [departamento]
+            );
+            if (depRows.length > 0) {
+                id_departamento = depRows[0].id_departamento;
+            }
+        }
+
+        await pool.execute(
+            'UPDATE Usuarios SET Nombre=?, Correo=?, ID_Rol=?, Numero_de_Documento=?, id_departamento=? WHERE ID_Usuario=?',
+            [nombre, email, rol, numero_de_documento, id_departamento, id]
+        );
+        res.json({ mensaje: 'Usuario actualizado' });
+    } catch (error) {
         res.status(500).json({ error: error.message });
     }
 });
@@ -87,7 +117,6 @@ app.post('/admin', async (req, res) => {
 // Login de usuario
 app.post('/login', async (req, res) => {
     try {
-        console.log('Datos recibidos en /login:', req.body);
         const { email, password } = req.body;
 
         if (!email || !password) {
@@ -95,9 +124,8 @@ app.post('/login', async (req, res) => {
         }
 
         const [rows] = await pool.execute(
-            `SELECT u.ID_Usuario, u.Correo, u.Contraseña, r.tipo AS Rol
+            `SELECT u.ID_Usuario, u.Nombre, u.Correo, u.Contraseña, u.Numero_de_Documento, u.ID_Rol AS Rol
              FROM Usuarios u
-             JOIN Roles r ON u.ID_Rol = r.ID_Rol
              WHERE u.Correo = ?`,
             [email]
         );
@@ -117,14 +145,11 @@ app.post('/login', async (req, res) => {
             id: user.ID_Usuario,
             nombre: user.Nombre,
             correo: user.Correo,
-            rol: user.Rol,
-            numero_de_documento: user.numero_de_documento
+            rol: user.Rol, // numérico: 1, 2, 3
+            numero_de_documento: user.Numero_de_Documento
         };
-
-        console.log("Usuario logueado:", userData);
         res.json(userData);
     } catch (error) {
-        console.error("Error en /login:", error);
         res.status(500).json({ error: error.message });
     }
 });
@@ -140,10 +165,6 @@ process.on('unhandledRejection', (reason, promise) => {
 });
 
 const PORT = process.env.PORT || 5170;
-console.log('Antes de app.listen');
 app.listen(PORT, () => {
     console.log(`Servidor backend corriendo en http://localhost:${PORT}`);
 });
-console.log('Después de app.listen');
-
-
