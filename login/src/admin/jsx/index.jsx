@@ -97,6 +97,8 @@ function Index() {
     }
   };
 
+  
+
   // Cargar usuarios al montar el componente
   useEffect(() => {
     fetchUsuarios();
