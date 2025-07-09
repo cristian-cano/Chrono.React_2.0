@@ -15,7 +15,7 @@ function Login({ show, onClose }) {
     e.preventDefault();
 
     try {
-       const response = await fetch('/usuario/login', {
+      const response = await fetch('/usuario/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -23,12 +23,12 @@ function Login({ show, onClose }) {
         body: JSON.stringify({ email, password })
       });
 
-      // Lee el texto de la respuesta primero
       const text = await response.text();
+       console.log("Texto recibido del backend:", text); // 👈 añade esto
       let data = {};
       try {
         data = text ? JSON.parse(text) : {};
-      // eslint-disable-next-line no-unused-vars
+        console.log("JSON parseado:", data); // 👈 añade esto
       } catch (parseError) {
         setError('Respuesta inválida del servidor');
         setSuccessMessage('');
@@ -43,15 +43,17 @@ function Login({ show, onClose }) {
 
       setSuccessMessage(`¡Bienvenido, ${data.nombre} (${data.rol})!`);
       setError('');
-      // Si login exitoso, redirige al index de admin
+
+      // 🔄 Corrección aquí: guardar correctamente el ID recibido como "data.id"
+      localStorage.setItem("id_usuario", data.id);
+
+      // Navegar según el rol
       if (data.rol === 'admin') {
-          localStorage.setItem("id_usuario", data.id_usuario); // o data.id si ese es el nombre correcto
-          navigate('/admin');
-        } else if (data.rol === 'empleado') {
-          localStorage.setItem("id_usuario", data.id_usuario); // o data.id
-          navigate('/empleado'); // Asegúrate de tener esta ruta
-        } else {
-          setError('Rol no reconocido');
+        navigate('/admin');
+      } else if (data.rol === 'empleado') {
+        navigate('/empleado');
+      } else {
+        setError('Rol no reconocido');
       }
 
     } catch (err) {
@@ -72,7 +74,7 @@ function Login({ show, onClose }) {
             left: 0,
             right: 0,
             bottom: 0,
-            backgroundcolor: 'rgb(0, 0, 0)',
+            backgroundColor: 'rgb(0, 0, 0)',
             display: 'flex',
             justifyContent: 'center',
             alignItems: 'center',
@@ -82,7 +84,6 @@ function Login({ show, onClose }) {
           <form className="formulari" onSubmit={handleSubmit}>
             <h2 className="inic">Inicio De Sesión</h2>
 
-            {/* ✅ Mensaje de éxito */}
             {successMessage && (
               <div style={{
                 backgroundColor: '#d4edda',
@@ -96,7 +97,6 @@ function Login({ show, onClose }) {
               </div>
             )}
 
-            {/* ⚠️ Mensaje de error */}
             {error && (
               <div style={{
                 backgroundColor: '#f8d7da',
@@ -156,7 +156,6 @@ function Login({ show, onClose }) {
               Iniciar Sesión
             </button>
 
-            {/* Botón para cerrar modal */}
             <button
               type="button"
               onClick={onClose}
