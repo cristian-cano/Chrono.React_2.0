@@ -15,7 +15,7 @@ function Login({ show, onClose }) {
     e.preventDefault();
 
     try {
-      const response = await fetch('/usuario/login', {
+      const response = await fetch('http://localhost:5170/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -24,12 +24,13 @@ function Login({ show, onClose }) {
       });
 
       const text = await response.text();
-       console.log("Texto recibido del backend:", text); 
+       console.log("Texto recibido del backend:", text); // 👈 añade esto
       let data = {};
       try {
         data = text ? JSON.parse(text) : {};
-        console.log("JSON parseado:", data); 
-      } catch {
+        console.log("JSON parseado:", data); // 👈 añade esto
+      // eslint-disable-next-line no-unused-vars
+      } catch (parseError) {
         setError('Respuesta inválida del servidor');
         setSuccessMessage('');
         return;
@@ -44,18 +45,14 @@ function Login({ show, onClose }) {
       setSuccessMessage(`¡Bienvenido, ${data.nombre} (${data.rol})!`);
       setError('');
 
-      //  Corrección aquí: guardar correctamente el ID recibido como "data.id"
+      // 🔄 Corrección aquí: guardar correctamente el ID recibido como "data.id"
       localStorage.setItem("id_usuario", data.id);
-      localStorage.setItem("rol_usuario", String(data.rol));
 
-      
       // Navegar según el rol
-      if (data.rol === 'admin' || data.rol === 1) {
+      if (data.rol === 'admin') {
         navigate('/admin');
-      } else if (data.rol === 'empleado' || data.rol ===  3) {
+      } else if (data.rol === 'empleado') {
         navigate('/empleado');
-      } else if (data.rol === 'secretaria' || data.rol === 2) {
-        navigate('/secretaria');
       } else {
         setError('Rol no reconocido');
       }

@@ -27,7 +27,7 @@ function DashboardUsuario() {
       .catch((error) => console.error("Error al obtener usuario:", error));
   }, [navigate]);
 
-  const handleChangePassword = async () => {
+  async function handleChangePassword() {
     setMsg('');
     if (!oldPass || !newPass || !confirmPass) {
       setMsg('Completa todos los campos.');
@@ -60,7 +60,7 @@ function DashboardUsuario() {
     } catch {
       setMsg('Error de conexión.');
     }
-  };
+  }
 
   const styles = {
     root: {
