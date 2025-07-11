@@ -175,6 +175,7 @@ const pool = mysql.createPool({
         }
     });
 
+    //notificaciones empleados
     app.post('/empleado/solicitud', async (req, res) => {
         try {
             const { ID_Usuario, id_departamento, tipo, mensaje, Fecha_Solicitud } = req.body;
@@ -226,6 +227,93 @@ const pool = mysql.createPool({
             console.error("Error al guardar solicitud:", error);
             res.status(500).json({ error: error.message });
         }
+    });
+
+    // Obtener notificaciones para empleados
+    app.get('/notificaciones_empleado', async (req, res) => {
+        try {
+            const idUsuario = req.query.id_usuario;
+            if (!idUsuario) {
+                return res.status(400).json({ error: 'Falta el ID de usuario' });
+            }
+
+            const [rows] = await pool.execute(
+                `SELECT 
+                    ID_notificacion, 
+                    Fecha_Solicitud, 
+                    ID_Usuario, 
+                    ID_tipoPermiso, 
+                    tipo, 
+                    Correo
+                FROM Notificaciones
+                WHERE ID_Usuario = ?
+                ORDER BY Fecha_Solicitud DESC`,
+                [idUsuario]
+            );
+            res.json(rows);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+
+    // Obtener notificaciones para admin y secretaria
+    app.get('/notificaciones_admin', async (req, res) => {
+        try {
+            const [rows] = await pool.execute(
+                `SELECT 
+                    ID_notificacion, 
+                    Fecha_Solicitud, 
+                    ID_Usuario, 
+                    ID_tipoPermiso, 
+                    tipo, 
+                    Correo
+                FROM Notificaciones_ADMIN
+                ORDER BY Fecha_Solicitud DESC`
+            );
+            res.json(rows);
+        } catch (error) {
+            res.status(500).json({ error: error.message });
+        }
+    });
+
+    //
+    app.post('/usuario/login', async (req, res) => {
+        try {
+            const { email, password } = req.body;
+
+            if (!email || !password) {
+                return res.status(400).json({ error: 'Faltan datos de login' });
+            }
+
+            const [rows] = await pool.execute(
+                `SELECT u.ID_Usuario, u.Nombre, u.Correo, u.Contraseña, u.Numero_de_Documento, u.ID_Rol AS Rol
+                FROM Usuarios
+                WHERE u.Correo = ?`,
+                [email]
+            );
+
+            if (rows.length === 0) {
+                return res.status(401).json({ error: 'Usuario no encontrado' });
+            }
+
+            const user = rows[0];
+            const hashedPassword = crypto.createHash('md5').update(password).digest('hex');
+
+            if (hashedPassword !== user.Contraseña) {
+                return res.status(401).json({ error: 'Contraseña incorrecta' });
+            }
+
+        const userData = {
+            id: user.ID_Usuario,
+            nombre: user.Nombre,
+            correo: user.Correo,
+            rol: user.Rol, // numérico: 1, 2, 3
+            numero_de_documento: user.Numero_de_Documento
+        };
+        res.json(userData);
+    } catch (error) {
+        res.status(500).json({ error: error.message });
+    }
     });
 
     // Login de usuario
